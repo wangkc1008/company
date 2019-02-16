@@ -1,0 +1,87 @@
+{% block head %}
+    <title>{{ title }}</title>
+    {% include "static_resource.php" %}
+    <script type="text/javascript">
+        $(function(){
+        $(".submit").click(function () {
+            var value = "";
+            var a = document.getElementsByName("chk");
+            var id2 = document.getElementById("pid").getAttribute("value");
+            for (var i=0;i<a.length;i++ ){
+                if(a[i].checked){
+                    value=value+"1";
+                }else{
+                    value=value+"0";
+                }
+            }
+            var url = "?c=user_permission&m=update";
+            $.ajax({
+                type:"post",
+                url:url,
+                data:{
+                    id:id2,
+                    auth:value
+                },
+                datatype:"json",
+                success:function (data){
+                    var data = eval('('+data+')');
+                    if(data.success){
+                        alert("保存成功");
+                        location.reload(true);
+                    }else{
+                        alert("删除失败");
+                    }
+                },
+                error:function (data) {
+                    alert("请求错误，请检查网络");
+                }
+            });
+        });
+    }); 
+    </script>
+    <script type="text/javascript">
+        var isCheckAll = false;
+        function swapCheck() {
+            var classname = $(this).attr("class");
+            if (isCheckAll) {
+                $('input[class="'+classname+'"]').each(function() {
+                    this.checked = false;
+                });
+                isCheckAll = false;
+            } else {
+                $('input[class="'+classname+'"]').each(function() {
+                    this.checked = true;
+                });
+                isCheckAll = true;
+            }
+        }
+    </script>
+{% endblock %}
+{% block container %}
+    <body>
+        {% include "navigation.twig" %}
+       <div style='margin-top:150px; padding: 1px 200px'>
+            <div  style='text-align:center;'><h3>用户权限</h3></div>
+            <table class="table table-striped table-bordered" border='1px'>
+                <tr>
+                    <th>子系统</th>
+                    <th width="500px">模块权限</th>
+                </tr>
+                <input style='display:none' id='pid' value='{{id}}' />
+                {% for key,item in menuTab %}
+                <tr>
+                    <td><input type="checkbox" class='{{item.id}}' onclick='swapCheck.call(this)'/>{{item.name}}</td>
+                    <td>{% for key,nav in item.child_nodes%}
+                        <input type="checkbox" class='{{item.id}}'
+                        {% if nav.checked==1 %} checked {% endif %} name="chk">{{nav.name}}
+                        {% endfor %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+            <input class='submit btn btn-primary' type='button' value='保存'/>
+            <a href='?c=user_manage' style='margin-left:30px'><button class="btn btn-primary">返回</button></a>
+        </div>
+        
+    </body>
+{% endblock %}

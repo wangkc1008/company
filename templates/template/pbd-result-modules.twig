@@ -1,0 +1,222 @@
+{# 导出 #}
+{% macro exportData() %}
+    <div class="modal fade" id="export-model" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">导出数据</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="exports-list">
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="exports">
+                                <thead>
+                                <tr>
+                                    <td>起始</td>
+                                    <td>结束</td>
+                                    <td>导出</td>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endmacro %}
+
+{# 纠错 #}
+{% macro error() %}
+    <div class="modal fade" id="error-model" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">纠错</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="error">
+                        <div class="chk">
+                            <label class="checkbox-inline" style="padding-left: 10px;">
+                                <input type="radio" class="chk" name="jc" value="0"> 图片识别错误
+                            </label>
+                            <label class="checkbox-inline" style="padding-left: 0px;">
+                                <input type="radio" class="chk"  name="jc" value="1"> 车牌识别错误
+                            </label>
+                            <label class="checkbox-inline" style="padding-left: 0px;">
+                                <input type="radio" class="chk" name="jc" value="2"> 设备时间错误
+                            </label>
+                            <label class="checkbox-inline" style="padding-left: 0px;">
+                                <input type="radio" class="chk" name="jc" value="3"> 卡口位置错误
+                            </label>
+                            <label class="checkbox-inline" style="padding-left: 0px;">
+                                <input type="radio" class="chk" name="jc" value="4"> 其他
+                            </label>
+                        </div>
+                        <textarea class="form-control reason" rows="3" placeholder="请详细描述错误类型"></textarea>
+                        <div class="form-group text-center">
+                            <button type="button" class="btn btn-primary btn-error">确定</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endmacro %}
+{# type:页面名字   groupSelect:分组筛选条件#}
+{% macro terms(searchTerms, type, groupSelect) %}
+    <div class="condition clearfix">
+        <div class="con-block">
+            {% for item in searchTerms %}
+                <p>{{ item.name }} : {{ item.value }}</p>
+            {% endfor %}
+        </div>
+    </div>
+    {% if type == 'fake' or type == 'similar' or type == 'group' or type=='multi' %}
+    {% elseif type=='carCommon' %}
+        <div class="filter-group-option">
+            <span class="sub">分组筛选条件：</span>
+            <button class="btn btn-default btn-sm">全部清除</button>
+            <ul>
+                {% for item in groupSelect %}
+                    {% if loop.last %}
+                        <li class="last" data-key="{{ item.groupKey }}" data-type="{{ item.type }}"
+                            data-value="{{ item.value }}">
+                            <div class="input-group">
+                                <span>{{ item.text }}</span>
+                                <div class="input-group-addon"><i class="glyphicon glyphicon-remove"></i></div>
+                            </div>
+                        </li>
+                    {% else %}
+                        <li data-key="{{ item.groupKey }}" data-type="{{ item.type }}" data-value="{{ item.value }}">
+                            <span>{{ item.text }}</span>&gt
+                        </li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        </div>
+    {% else %}
+        <div class="filter-option">
+            <ul class="row main-sele" id="filterResult">
+                {#<li class="col-md-1"><span data-option="tpc"#}
+                {#class="glyphicon glyphicon-unchecked"></span>套牌车#}
+                {#</li>#}
+                {% if type == "first" %}
+                    <li class="col-md-2" data-option="zdmb">
+                        <span class="glyphicon glyphicon-check glyphicon-unchecked" id="filterZDMB"></span>遮挡面部
+                    </li>
+                {% elseif type == "second" %}
+                {% elseif type == "third" %}
+                    <li class="col-md-2" data-option="ccrc">
+                        <span class="glyphicon glyphicon-check glyphicon-unchecked" id="filterCCRC"></span>初次入城（30天）
+                    </li>
+                {% else %}
+                    <li class="col-md-2" data-option="zdmb">
+                        <span class="glyphicon glyphicon-check glyphicon-unchecked" id="filterZDMB"></span>遮挡面部
+                    </li>
+                    <li class="col-md-2" data-option="ccrc">
+                        <span class="glyphicon glyphicon-check glyphicon-unchecked" id="filterCCRC"></span>初次入城（30天）
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    {% endif %}
+{% endmacro %}
+
+{#filterResult:判断是否显示遮挡面部和初次入城#}
+{% macro groupBar(model,groupUrl,filterResult,isGroup) %}
+    {% if model == 'common' %}
+        <div class="col-md-8 js-group-wrapper">
+            <span class="sub">分组:</span>
+            {% if groupUrl.default %}
+                <a class="btn btn-sm btn-default active" href="{{ groupUrl.default | raw }}">默认</a>
+            {% else %}
+                <a class="btn btn-sm btn-default active" href="##">默认</a>
+            {% endif %}
+            <a class="btn btn-sm btn-default" href="{{ groupUrl.plate | raw }}">按车牌分组</a>
+            <a class="btn btn-sm btn-default" href="{{ groupUrl.carInfo | raw }}">按车型分组</a>
+            <a class="btn btn-sm btn-default" href="{{ groupUrl.location | raw }}">按卡口分组</a>
+        </div>
+    {% elseif model=='carCommon' %}
+        <div class="col-md-2">
+            <span class="sub">分组方式:</span>
+            <div class="btn-group">
+                <button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
+                    请选择分组 <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    {% for key, value in groupUrl %}
+                        <li data-type="{{ key }}"><a href="#">{{ value.text }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        {% if isGroup %}
+        {% else %}
+            <div class="col-md-6">
+                {% if filterResult %}
+                {% else %}
+                    <span class="sub">筛选方式:</span>
+                    <div class="btn-group">
+                        <button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown"
+                                aria-haspopup="true" aria-expanded="false">
+                            请选择筛选方式 <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li data-type="zdmb"><a href="#">遮挡面部</a></li>
+                            <li data-type="ccrc"><a href="#">初次入城（30天）</a></li>
+                            <li data-type="rlsc"><a href="#">可识别驾乘人脸</a></li>
+                        </ul>
+                    </div>
+                {% endif %}
+            </div>
+            <div class="show-style">
+                <span class="sub">显示方式:</span>
+                <a class="btn btn-sm btn-default picText js-span active">图文显示</a>
+                <a class="btn btn-sm btn-default list js-span">列表显示</a>
+            </div>
+        {% endif %}
+    {% elseif model == 'hasTextTogglelist' %}
+        <div class="col-md-6 js-group-wrapper">
+            <span class="sub">分组:</span>
+            {% if groupUrl.default %}
+                <a class="btn btn-sm btn-default active" href="{{ groupUrl.default | raw }}">默认</a>
+            {% else %}
+                <a class="btn btn-sm btn-default active" href="##">默认</a>
+            {% endif %}
+            <a class="btn btn-sm btn-default" href="{{ groupUrl.plate | raw }}">按车牌分组</a>
+            <a class="btn btn-sm btn-default" href="{{ groupUrl.carInfo | raw }}">按车型分组</a>
+            <a class="btn btn-sm btn-default" href="{{ groupUrl.location | raw }}">按卡口分组</a>
+        </div>
+        <div class="show-style">
+            <span class="sub">显示方式:</span>
+            {#<span class="btn btn-sm btn-default picText spanBtn act">图文显示</span>#}
+            {#<span class="btn btn-sm btn-default list spanBtn">列表显示</span>#}
+            <a class="btn btn-sm btn-default picText js-span active">图文显示</a>
+            <a class="btn btn-sm btn-default list js-span">列表显示</a>
+        </div>
+    {% elseif model == 'noneGroup' %}
+        <div class="show-style">
+            <span class="sub">显示方式:</span>
+            <a class="btn btn-sm btn-default picText js-span active" data-toggle="tab"
+               href="#item-list">图文显示</a>
+            <a class="btn btn-sm btn-default list js-span" data-toggle="tab" href="#table-list">列表显示</a>
+        </div>
+    {% endif %}
+
+{% endmacro %}
+
+
+

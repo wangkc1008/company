@@ -1,0 +1,353 @@
+{% block head %}
+    <title>{{ title }}</title>
+    <style>
+        .my-container {
+            margin-top: 100px;
+        }
+
+        h4 {
+            margin-left: 47%;
+            margin-bottom: 20px;
+        }
+
+    </style>
+    {% include "static_resource.php" %}
+{% endblock %}
+{% block container %}
+    <body>
+    {% include "navigation.twig" %}
+    <div class="container my-container">
+
+        <div class="row clearfix" style="margin-bottom: 20px">
+            <div class="col-md-12 column">
+                <h4>用户管理</h4>
+            </div>
+        </div>
+        <div class="row clearfix">
+            <div class="col-md-12">
+                <div class="row clearfix">
+                    <div class="col-md-10 col-md-offset-2 column">
+                        <div class="row clearfix">
+                            <div class="col-md-8 column">
+                                <form role="form" action='{{ searchUrl|raw }}' method='get'>
+                                    <input type="hidden" name="c" value="user_manage"/>
+                                    <div class="row clearfix">
+                                        <div class="col-md-4 column">
+                                            <select class="form-control" name='depart'>
+                                                <option value='0'>请选择部门</option>
+                                                <option value='1' {% if depart==1 %} selected {% endif %}>开发</option>
+                                                <option value='2' {% if depart==2 %} selected {% endif %}>测试</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6 column">
+                                            <input class="form-control" type="text" name='name'
+                                                   placeholder='姓名/员工编号' {% if name!='' %} value='{{ name }}' {% endif %}>
+                                        </div>
+                                        <div class="col-md-2 column">
+                                            <button class="btn btn-success btn-sm" type='submit'>搜索</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="col-md-4 column">
+                                <button class="btn btn-primary" data-toggle="modal" data-target="#add-user">添加新用户
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12 column" style="margin-top: 30px">
+            <table class="table table-striped table-bordered">
+                <thead>
+                <tr>
+                    <th>序号</th>
+                    <th>用户名</th>
+                    <th>姓名</th>
+                    <th>员工编号</th>
+                    <th>部门</th>
+                    <th>邮箱</th>
+                    <th width="20%">操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for key,value in data %}
+                    <tr class="user-data" tr-user-id="{{ value['user_id'] }}">
+                        <td style='display:none;'>{{ value['user_id'] }}</td>
+                        <td>{{ (current_page-1)*20+key+1 }}</td>
+                        <td>{{ value['user_name'] }}</td>
+                        <td>{{ value['staff_name'] }}</td>
+                        <td>{{ value['staff_num'] }}</td>
+                        <td>{{ value['staff_dpt'] }}</td>
+                        <td>{{ value['staff_email'] }}</td>
+                        <td>
+                            <div class="col-sm-12">
+                                <a href="?c=user_permission&m=index&id={{ value['user_id'] }}">
+                                    <button class="btn btn-primary">权限</button>
+                                </a>
+                                <button user-id= "{{ value['user_id'] }}" data-toggle="modal" data-target="#edit-user" class="btn btn-warning edit-button">修改</button>
+                                <button user-id="{{ value['user_id'] }}" user-name="{{ value['user_name'] }}"
+                                        class="btn btn-danger del-button">删除
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- 分页 -->
+    <div class="row clearfix">
+        <div class="col-md-8 column col-md-offset-4">
+            <ul class="pagination">
+                {% if current_page == 1 %}
+                    <li><a href="{{ searchUrl|raw }}&pn={{ current_page }}">上一页</a></li>
+                {% else %}
+                    <li><a href="{{ searchUrl|raw }}&pn={{ current_page-1 }}">上一页</a></li>
+                {% endif %}
+                {% for page in pages %}
+                    {% if current_page == page %}
+                        <li><a style="background:#1db69a; " href="{{ searchUrl|raw }}&pn={{ page }}">{{ page }}</a>
+                        </li>
+                    {% else %}
+                        <li><a href="{{ searchUrl|raw }}&pn={{ page }}">{{ page }}</a></li>
+                    {% endif %}
+                {% endfor %}
+                {% if current_page == total_page %}
+                    <li><a href="{{ searchUrl|raw }}&pn={{ current_page }}">下一页</a></li>
+                {% else %}
+                    <li><a href="{{ searchUrl|raw }}&pn={{ current_page+1 }}">下一页</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+    <div class="row clearfix">
+        <div class="col-md-12 column">
+        </div>
+    </div>
+    </div>
+
+
+    <div class="modal fade" id="add-user" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">添加新用户</h4>
+                </div>
+                <div class="modal-body">
+                    <form method="post" action="{{ currentUrl }}&m=insert">
+                        <div class="form-group">
+                            <label for="username" class="col-sm-2 control-label">用户名</label>
+                            <div class="col-sm-10" style="margin-bottom: 10px;">
+                                <input type="text" class="form-control" id="username" placeholder="请输入用户名" name="user_name">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="password" class="col-sm-2 control-label">密码</label>
+                            <div class="col-sm-10" style="margin-bottom: 10px;">
+                                <input type="text" class="form-control" id="password" placeholder="请输入密码" name="user_passwd">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="staff-name" class="col-sm-2 control-label">员工名</label>
+                            <div class="col-sm-10" style="margin-bottom: 10px;">
+                                <input type="text" class="form-control" id="staff-name" placeholder="请输入员工名" name="staff_name">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="staff-email" class="col-sm-2 control-label">员工邮箱</label>
+                            <div class="col-sm-10" style="margin-bottom: 10px;">
+                                <input type="email" class="form-control" id="staff-email" placeholder="请输入员工邮箱" name="staff_email">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="staff-num" class="col-sm-2 control-label">员工编号</label>
+                            <div class="col-sm-10" style="margin-bottom: 10px;">
+                                <input type="number" class="form-control" id="staff-num" placeholder="请输入员工工号" name="staff_num">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">角色</label>
+                            <div class="col-sm-10" style="margin-bottom: 10px;">
+                                <select class="form-control" name='character'>
+                                    <option value='common'>普通用户</option>
+                                    <option value='admin'>管理员</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">部门</label>
+                            <div class="col-sm-10" style="margin-bottom: 10px;">
+                                <select class="form-control" name='depart'>
+                                    <option value='开发运维部-前端'>开发运维部-前端</option>
+                                    <option value='开发运维部-后端'>开发运维部-后端</option>
+                                    <option value='测试'>测试</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary">
+                                添加用户
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+    <div class="modal fade" id="edit-user" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">修改用户数据</h4>
+                </div>
+                <div class="modal-body">
+                    <form method="post" action="{{ currentUrl }}&m=update">
+                        <input id="edit-user-id" type="hidden" name="user_id">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">用户名</label>
+                            <div class="col-sm-10" style="margin-bottom: 10px;">
+                                <input type="text" class="form-control" id="edit-username" placeholder="请输入用户名" name="user_name">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="password" class="col-sm-2 control-label">密码</label>
+                            <div class="col-sm-10" style="margin-bottom: 10px;">
+                                <input type="text" class="form-control" id="edit-password" placeholder="请输入密码" name="user_passwd">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="staff-name" class="col-sm-2 control-label">员工名</label>
+                            <div class="col-sm-10" style="margin-bottom: 10px;">
+                                <input type="text" class="form-control" id="edit-staff-name" placeholder="请输入员工名" name="staff_name">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="staff-email" class="col-sm-2 control-label">员工邮箱</label>
+                            <div class="col-sm-10" style="margin-bottom: 10px;">
+                                <input type="email" class="form-control" id="edit-staff-email" placeholder="请输入员工邮箱" name="staff_email">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="staff-num" class="col-sm-2 control-label">员工编号</label>
+                            <div class="col-sm-10" style="margin-bottom: 10px;">
+                                <input type="number" class="form-control" id="edit-staff-num" placeholder="请输入员工工号" name="staff_num">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">角色</label>
+                            <div class="col-sm-10" style="margin-bottom: 10px;">
+                                <select class="form-control" name='character' id="edit-staff-char">
+                                    <option value='common'>普通用户</option>
+                                    <option value='admin'>管理员</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label" id="edit-staff-depart">部门</label>
+                            <div class="col-sm-10" style="margin-bottom: 10px;">
+                                <select class="form-control" name='depart' id="edit-staff-dpt">
+                                    <option value='开发运维部-前端'>开发运维部-前端</option>
+                                    <option value='开发运维部-后端'>开发运维部-后端</option>
+                                    <option value='测试'>测试</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary">
+                                修改用户信息
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+
+    </body>
+
+    <script>
+        /**
+         * 删除用户的ajax
+         */
+        $(".del-button").click(function () {
+            let res = confirm("确定要删除用户名为：" + $(this).attr("user-name") + " 的用户吗？");
+            if (res === true) {
+                $.ajax({
+                    type: "POST",
+                    url: "{{ currentUrl }}&m=delete",
+                    data: {
+                        "id": Number($(this).attr("user-id"))
+                    },
+                    dataType: "json",
+                    success: function (data) {
+                        console.log(data);
+                        if (data.success === 0) {
+                            alert("删除失败，权限不足！");
+                        } else {
+                            alert("删除成功！");
+                            location.href = "{{ currentUrl }}";
+                        }
+                    },
+                    error: function () {
+                        alert("连接服务器失败！");
+                    }
+                });
+            }
+        });
+
+        /**
+         * 修改用户数据按钮，先ajax获取数据，遍历到弹窗
+         */
+        $(".edit-button").click(function () {
+
+            $.ajax({
+                type: "POST",
+                url: "{{ currentUrl }}&m=get",
+                data: {
+                    "id": Number($(this).attr("user-id"))
+                },
+                dataType: "json",
+                success: function (data) {
+                    dispaly_old_data(data);
+                },
+                error: function () {
+                    alert("获取用户信息失败！");
+                }
+            });
+        });
+
+        /**
+         * 将数据遍历到修改弹出框上
+         * @param data
+         */
+        function dispaly_old_data(data) {
+            let e = data[0];
+            $("#edit-username").val(e['user_name']);
+            $("#edit-password").val(e['user_passwd']);
+            $("#edit-staff-email").val(e['staff_email']);
+            $("#edit-staff-name").val(e['staff_name']);
+            $("#edit-staff-num").val(e['staff_num']);
+            if (e['authority']==="admin"){
+                $("#edit-staff-char").val("admin");
+            } else {
+                $("#edit-staff-char").val("common");
+            }
+            $("#edit-staff-dpt").val(e['staff_dpt']);
+            $("#edit-user-id").val(e['user_id']);
+        }
+    </script>
+{% endblock %}

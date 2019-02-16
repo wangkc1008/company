@@ -1,0 +1,39 @@
+{% block head %}
+    <meta charset="UTF-8">
+    <title>测试首页</title>
+    {# 静态资源链接 #}
+    {#<base href="{{ base_url}}">#}
+    {# 导入jQuery库和js文件 #}
+    {% include "static_resource.php" %}
+    {#<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>#}
+    <script type="text/javascript" src="./templates/yisa_statics/js/systest.js"></script>
+    {# 导入bootstrap #}
+    <link rel="stylesheet" href="./templates/yisa_statics/css/systest.css" type="text/css">
+{% endblock %}
+{% block container %}
+<body>
+    {% include "navigation.twig" %}
+{# 系统列表 #}
+<div class="row" style='margin-top:100px'>
+    {% for system in systems %}
+    <a href="?c=systest&m=detail&system={{ system }}" target="_blank">
+        <div class="col-md-2 sys_list">{{ system }}</div>
+    </a>
+    {% endfor %}
+</div>
+{# 添加系统 #}
+<div id="div_add_sys" class="col-md-6 add_sys">
+    添加系统：<input id="add_sys_input" type="text">
+    <button id="add_sys" class="sys_button">添加</button>
+</div>
+{# 删除系统 #}
+<div id="div_del_sys" class="col-md-6 del_sys">
+    删除系统：<select id="del_sys_select">
+        {% for system in systems %}
+            <option>{{ system }}</option>
+        {% endfor %}
+    </select>
+    <button id="del_sys" class="sys_button">删除</button>
+</div>
+</body>
+{% endblock %}

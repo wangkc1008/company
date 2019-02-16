@@ -1,0 +1,9 @@
+{% macro loadingTemplate(title,desc) %}
+    <div class="alarm-no js-loading">
+        <h2>{{ title }}</h2>
+        <div class="alarm-loading">
+            <img src="{{ staticsUrl }}/images/pbd-bk-loading.gif" alt="loading">
+            <p>{{ desc }}</p>
+        </div>
+    </div>
+{% endmacro %}

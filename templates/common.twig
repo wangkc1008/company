@@ -1,0 +1,82 @@
+
+{% block head %}
+    <title>{{ title }}</title>
+    {% include "static_resource.php" %}
+{% endblock %}
+{% block container %}
+        <body>
+            {% include "navigation.twig" %}
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12" style="margin-top: 120px">
+                        <ul>
+                        <div class="container">
+                            <div class="row">
+                                <div class="span12">
+                                    <li>
+                                        <h2>开发</h2>
+                                        <div class='menu'>
+                                            <ul>
+                                                {% for key,value in develop %}
+                                                <li><a href='{{value.url}}'>{{value.name}}</a><li>
+                                                    {% endfor %}
+                                            </ul>
+                                        </div>
+                                    </li>
+                                    <br/>
+                                    <br/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="span12">
+                                    <li>
+                                        <h2>培训</h2>
+                                        <div class='menu'>
+                                            <ul>
+                                                {% for key,value in train %}
+                                                <li><a href='{{value.url}}'>{{value.name}}</a><li>
+                                                    {% endfor %}
+                                            </ul>
+                                        </div>
+                                    </li>
+                                    <br/>
+                                    <br/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="span12">
+                                    <li>
+                                        <h2>测试</h2>
+                                        <div class='menu'>
+                                            <ul>
+                                                {% for key,value in test %}
+                                                <li><a href='{{value.url}}'>{{value.name}}</a><li>
+                                                    {% endfor %}
+                                            </ul>
+                                        </div>
+                                    </li>
+                                    <br/>
+                                    <br/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="span12">
+                                    <li>
+                                        <h2>后台</h2>
+                                        <div class='menu'>
+                                            <ul>
+                                                {% for key,value in backen %}
+                                                <li><a href='{{value.url}}'>{{value.name}}</a><li>
+                                                    {% endfor %}
+                                            </ul>
+                                        </div>
+                                    </li>
+                                </div>
+                            </div>
+                        </div>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </body>
+{% endblock %}

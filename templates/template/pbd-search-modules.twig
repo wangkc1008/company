@@ -1,0 +1,890 @@
+{# 卡口类型 #}
+{% macro locationType(data) %}
+    <div class="form-group select-cell">
+        <select id="locationType" class="yisa-select" data-text="卡口类型" data-submit="location_type">
+            {% for item in data %}
+                <option value="{{ item.id }}" {% if item.selected %} selected="selected" {% endif %}>{{ item.text }}</option>
+            {% endfor %}
+        </select>
+    </div>
+{% endmacro %}
+{# 目标类型 #}
+{% macro goalType(goalType) %}
+    <div class="form-group select-cell">
+        <select id="goals" class="yisa-select" data-text="目标类型" data-submit="goal_id" data-default="0">
+            {% for item in goalType %}
+                <option value="{{ item.id }}" {% if item.selected %} selected="selected" {% endif %}>{{ item.text }}</option>
+            {% endfor %}
+        </select>
+    </div>
+{% endmacro %}
+{# 车牌号码 #}
+{% macro carPlateNum(province) %}
+    <div class="form-group clearfix">
+        <div class="col-xs-6 select-cell">
+            <label class="select-text">车牌号码</label>
+            {% if request.plate == '无牌' %}
+            <input id="input-num" autocomplete="off" data-value="" class="input-control input-focus transform-uppercase" name="plate_number" type="text"
+                   data-accurate="false" data-radio="true"
+                   data-toggle="popover" data-container="body" data-placement="right" data-trigger="focus"
+                   data-content="提示：模糊查询可用“*”代替任意位数，“？”代替一位（如：{{ province }}*45，{{ province }}A？34？5）">
+            {% else %}
+            <input id="input-num" autocomplete="off" data-value="{{ request.plate }}" class="input-control input-focus transform-uppercase" name="plate_number" type="text"
+                   data-accurate="false" data-radio="true"
+                   data-toggle="popover" data-container="body" data-placement="right" data-trigger="focus"
+                   data-content="提示：模糊查询可用“*”代替任意位数，“？”代替一位（如：{{ province }}*45，{{ province }}A？34？5）">
+            {% endif %}
+            <div class="bottom-border"></div>
+        </div>
+        <div class="col-xs-6 select-cell">
+            <div class="radio text-center">
+                <label>
+                    {% if request.plate == '无牌' %}
+                    <input id="no-plate" data-name="isHavePlate_number" type="radio" value="1" name="isHavePlate_number" checked="checked"> 无车牌号
+                    {% else %}
+                    <input id="no-plate" data-name="isHavePlate_number" type="radio" value=""> 无车牌号
+                    {% endif %}
+                </label>
+            </div>
+        </div>
+    </div>
+{% endmacro %}
+
+{# 车辆型号和车辆品牌 #}
+{# modelFlag true加载车辆型号 false加载车辆品牌 #}
+{% macro CarModel(modelFlag, name) %}
+    <div class="form-group select-cell">
+        <input name="brand_id" id="carBrand" type="hidden" value="0">
+        {% if modelFlag %}
+            <input name="model_id" id="carModel" type="hidden" value="0">
+            <input name="year_id" id="yearModel" type="hidden" value="0">
+        {% endif %}
+        <input id="yearTail" type="hidden">
+        <label class="select-text">{{ name|default('车辆型号') }}</label>
+        <div id="fullBrand"
+             class="select-control-static" {% if modelFlag %} data-modelflag="true" {% else %} data-modelflag="false" {% endif %}></div>
+        <span class="operation icon-arrow"><i class="glyphicon operation-glyphicon"></i></span>
+        <div class="bottom-border"></div>
+    </div>
+{% endmacro %}
+
+{# 人脸比对相似程度 #}
+{% macro FaceModel(name) %}
+    <div class="form-group select-cell">
+        {# <input name="brand_id" id="carBrand" type="hidden" value="0"> #}
+        {% if modelFlag %}
+            <input name="model_id" id="carModel" type="hidden" value="0">
+            <input name="year_id" id="yearModel" type="hidden" value="0">
+        {% endif %}
+        <input id="yearTail" type="hidden">
+        <label>{{ name|default('结果相似度') }}</label>
+        {# <div id="fullBrand"
+             class="select-control-static" {% if modelFlag %} data-modelflag="true" {% else %} data-modelflag="false" {% endif %}></div> #}
+        <div id='fullBrandFace' class="face-input">
+            大于<input id='fullBrandInput' name='carFace' value='80'/> %
+        </div>    
+        {# <span class="operation icon-arrow"><i class="glyphicon operation-glyphicon"></i></span> #}
+        {# <div class="bottom-border"></div> #}
+    </div>
+{% endmacro %}
+
+{# 车辆品牌 #}
+{% macro vehicleBrand() %}
+    <div class="form-group select-cell">
+        <input name="brand_id" id="carBrand" type="hidden">
+        <label class="select-text">车辆品牌</label>
+        <div id="fromcity" class="select-control-static" data-modelflag="false"></div>
+        <span class="operation icon-arrow"><i class="glyphicon operation-glyphicon"></i></span>
+        <div class="bottom-border"></div>
+    </div>
+{% endmacro %}
+
+{# 车辆类别 #}
+{% macro vehicleCategory(cate,name) %}
+    <div class="form-group select-cell">
+        <select id="categoryVal" class="yisa-select" data-text="{{ name|default('车辆类别') }}" data-submit="level_id" data-multi="true"
+                data-required="true" data-default="0">
+            {% for item in cate %}
+                <option value="{{ item.id }}" {% if item.selected %} selected {% endif %}>{{ item.text }}</option>
+            {% endfor %}
+        </select>
+    </div>
+{% endmacro %}
+
+{# 拍照方向 #}
+{% macro vehiclePart(data) %}
+    <div class="form-group select-cell">
+        <select id="parts" class="yisa-select" data-text="拍照角度" data-submit="source_id" data-default="0">
+            {% for item in data %}
+                <option value="{{ item.id }}" {% if item.selected %} selected="selected" {% endif %}>{{ item.text }}</option>
+            {% endfor %}
+        </select>
+    </div>
+{% endmacro %}
+
+{# 车辆颜色 #}
+{% macro vehicleColor(colorData) %}
+    <div class="form-group select-cell">
+        <select id="color" class="yisa-select" data-text="车辆颜色" data-submit="color_id"
+                data-required="" data-default="-1">
+            {% for item in colorData %}
+                <option value="{{ item.id }}" {% if item.selected %} selected="selected" {% endif %}>{{ item.text }}</option>
+            {% endfor %}
+        </select>
+    </div>
+{% endmacro %}
+
+{# 数据来源 #}
+{# {% macro Source(sourceData) %}
+    <div class="form-group select-cell">
+
+        <select id="dataForm" class="yisa-select" data-text="数据来源" data-submit="source_id"
+                data-required="" data-default="-1">
+            {% for item in sourceData %}
+                <option value="{{ item.id }}" {% if item.selected %} selected="selected" {% endif %}>{{ item.text }}</option>
+            {% endfor %}
+        </select>
+    </div>
+{% endmacro %}
+ #}
+
+
+{# 行驶方向 #}
+{% macro driveDirection(directionData) %}
+    <div class="form-group select-cell">
+        <select id="direction" class="yisa-select" data-text="行驶方向" data-submit="direction_id" data-multi="false"
+                data-required="" data-default="-1">
+            {% for item in directionData %}
+                <option value="{{ item.id }}" {% if item.selected %} selected="selected" {% endif %}>{{ item.text }}</option>
+            {% endfor %}
+        </select>
+    </div>
+{% endmacro %}
+
+
+{# 数据来源 #}
+{% macro dataSources(dataSources) %}
+    <div class="form-group select-cell">
+        <select id="data-sources" class="yisa-select" data-text="数据来源" data-submit="data_sources" data-multi="false"
+                data-required="" data-default="-1">
+            {% for item in dataSources %}
+                <option value="{{ item.id }}" {% if item.selected %} selected="selected" {% endif %}>{{ item.text }}</option>
+            {% endfor %}
+        </select>
+    </div>
+{% endmacro %}
+
+{# 车牌颜色 #}
+{% macro plateColor(colorData) %}
+    <div class="form-group select-cell">
+        <select id="plateColor" class="yisa-select" data-text="车牌颜色" data-submit="plate_type_id"
+                data-required="" data-default="-1">
+            {% for item in colorData %}
+                <option value="{{ item.id }}" {% if item.selected %} selected="selected" {% endif %}>{{ item.text }}</option>
+            {% endfor %}
+        </select>
+    </div>
+{% endmacro %}
+
+{# 布控方式 #}
+{% macro deployCategory(cate) %}
+    <div class="form-group">
+        <label class="col-md-3 control-label label-sub">布控方式</label>
+        <div class="col-md-9">
+            <select name="deploy_category_id" class="form-control default-color" id="deployType">
+                {% for item in cate %}
+                    <option value="{{ item.id }}" {% if item.selected %} selected="selected" {% endif %}>{{ item.text }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+{% endmacro %}
+
+{# 日期时间-日期和时间分开显示 #}
+{# 如果num未定义就显示加 否则不显示 #}
+{% macro dateTime(num,name) %}
+    <div>
+        <div class="PassTime-1">
+            {% if name=="traffic" %}
+                <div class="form-group">
+                    <label>开始时间：</label>
+                    <div class="date-group">
+                        <ul class="dwrap clearfix">
+                            <li>
+                                {% if request.start_time %}
+                                <input type="text" id="date-start" class="txt-date" value="{{ request.start_time }}"
+                                       name="begin_date"
+                                       autocomplete="off">
+                                {% else %}
+                                <input type="text" id="date-start" class="txt-date" value="{{ 'now'| date('Y-m-d') }}"
+                                       name="begin_date"
+                                       autocomplete="off">
+                                {% endif%}
+                            </li>
+                            <li>
+                                <input class="txt-time t-hour" data-name="h" type="text" value="00"
+                                       name="b_h"/><span>:</span></li>
+                            <li>
+                                <input class="txt-time t-minute" data-name="m" type="text" value="00"
+                                       name="b_m"/><span>:</span></li>
+                            <li>
+                                <input class="txt-time t-second" data-name="s" type="text" value="00" name="b_s"/>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>结束时间：</label>
+                    <div class="date-group">
+                        <ul class="dwrap clearfix">
+                            <li>
+                                {% if request.end_time %}
+                                <input type="text" id="date-end" class="txt-date" value="{{ request.end_time }}"
+                                       name="end_date"
+                                       autocomplete="off">
+                                {% else %}
+                                <input type="text" id="date-end" class="txt-date" value="{{ 'now'| date('Y-m-d') }}"
+                                       name="end_date"
+                                       autocomplete="off">
+                                {% endif %}
+                            </li>
+                            <li>
+                                <input class="txt-time t-hour" data-name="h" type="text" value="{{ "now"| date("H") }}"
+                                       name="e_h"/><span>:</span>
+                            </li>
+                            <li>
+                                <input class="txt-time t-minute" data-name="m" type="text"
+                                       value="{{ "now"| date("i") }}"
+                                       name="e_m"/><span>:</span></li>
+                            <li>
+                                <input class="txt-time t-second" data-name="s" type="text"
+                                       value="{{ "now"| date("s") }}"
+                                       name="e_s"/>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            {% elseif name=="realtimewarning" or name=="construction" or name=="tricyclecarry" %}
+                <div class="form-group col-md-4 none-pd-h">
+                    {% if name=="realtimewarning" %}
+                        <label>预警时间：</label>
+                    {% elseif name=="construction" or name=="tricyclecarry" %}
+                        <label>抓拍时间：</label>
+                    {% endif %}
+                    <div class="date-group">
+                        <ul class="dwrap clearfix">
+                            <li>
+                                <input type="text" id="date-start" class="txt-date" value="{{ "now"|date("Y-m-d") }}"
+                                       name="beginDate"
+                                       autocomplete="off">
+                            </li>
+                        </ul>
+                    </div>
+                    <label class="short-label">至</label>
+                    <div class="date-group">
+                        <ul class="dwrap clearfix">
+                            <li>
+                                <input type="text" id="date-end" class="txt-date" value="{{ "now"|date("Y-m-d") }}"
+                                       name="endDate"
+                                       autocomplete="off">
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            {% else %}
+                <div class="form-group select-cell open">
+                    <label class="select-text">过车时段</label>
+                    <div class="row">
+                        <div class="col-md-11 calendar-group">
+                            {#开始时间#}
+                            <ul class="calendar-control clearfix">
+                                <li class="calendar-date">
+                                    <input type="text" id="date-start" class="txt-date"
+                                           value="{{ "now"|date("Y-m-d") }}" name="begin_date" autocomplete="off">
+                                </li>
+                                <li class="calendar-h">
+                                    <input class="txt-time t-hour" data-name="h" type="text" value="00" name="b_h"
+                                           autocomplete="off"/><span>:</span>
+                                </li>
+                                <li class="calendar-m">
+                                    <input class="txt-time t-minute" data-name="m" type="text" value="00" name="b_m"
+                                           autocomplete="off"/><span>:</span>
+                                </li>
+                                <li class="calendar-s">
+                                    <input class="txt-time t-second" data-name="s" type="text" value="00" name="b_s"
+                                           autocomplete="off"/>
+                                </li>
+                            </ul>
+                            {#结束时间#}
+                            <ul class="calendar-control clearfix">
+                                <li class="calendar-date">
+                                    <input type="text" id="date-end" class="txt-date" value="{{ "now"|date("Y-m-d") }}"
+                                           name="end_date" autocomplete="off">
+                                </li>
+                                <li class="calendar-h">
+                                    <input class="txt-time t-hour" data-name="h" type="text"
+                                           value="{{ "now"| date("H") }}" name="e_h" autocomplete="off"/><span>:</span>
+                                </li>
+                                <li class="calendar-m">
+                                    <input class="txt-time t-minute" data-name="m" type="text"
+                                           value="{{ "now"| date("i") }}" name="e_m" autocomplete="off"/><span>:</span>
+                                </li>
+                                <li class="calendar-s">
+                                    <input class="txt-time t-second" data-name="s" type="text"
+                                           value="{{ "now"| date("s") }}" name="e_s" autocomplete="off"/>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-md-1 datebar datebarAdd">
+                            {% if num %}
+                            {% else %}
+                                <span class="datebarIcon zhe-img glyphicon glyphicon-plus-sign"></span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+        {% if num %}
+        {% else %}
+            <div class="PassTime-2 shownone">
+                <div class="form-group select-cell">
+                    <label class="select-text"></label>
+                    <div class="row">
+                        <div class="col-md-11 calendar-group">
+                            {#开始时间#}
+                            <ul class="calendar-control clearfix">
+                                <li class="calendar-date">
+                                    <input type="text" id="date-start-2" class="txt-date"
+                                           value="" name="begin_date2" autocomplete="off">
+                                </li>
+                                <li class="calendar-h">
+                                    <input class="txt-time t-hour" data-name="h" type="text" value="" name="b_h_2"
+                                           autocomplete="off"/><span>:</span>
+                                </li>
+                                <li class="calendar-m">
+                                    <input class="txt-time t-minute" data-name="m" type="text" value="" name="b_m_2"
+                                           autocomplete="off"/><span>:</span>
+                                </li>
+                                <li class="calendar-s">
+                                    <input class="txt-time t-second" data-name="s" type="text" value="" name="b_s_2"
+                                           autocomplete="off"/>
+                                </li>
+                            </ul>
+                            {#结束时间#}
+                            <ul class="calendar-control clearfix">
+                                <li class="calendar-date">
+                                    <input type="text" id="date-end-2" class="txt-date"
+                                           value="" name="end_date2" autocomplete="off">
+                                </li>
+                                <li class="calendar-h">
+                                    <input class="txt-time t-hour" data-name="h" type="text"
+                                           value="" name="e_h_2" autocomplete="off"/><span>:</span>
+                                </li>
+                                <li class="calendar-m">
+                                    <input class="txt-time t-minute" data-name="m" type="text"
+                                           value="" name="e_m_2" autocomplete="off"/><span>:</span>
+                                </li>
+                                <li class="calendar-s">
+                                    <input class="txt-time t-second" data-name="s" type="text"
+                                           value="" name="e_s_2" autocomplete="off"/>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-md-1 datebar datebarDes">
+                            <span class="datebarIcon glyphicon glyphicon-remove-sign"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+    </div>
+    <link rel="stylesheet" href="{{ staticsUrl }}/js/zebra-datepicker/zebra-date-blue.css">
+    <link rel="stylesheet" href="{{ staticsUrl }}/css/zebra-datepicker-dingzhi.css">
+    <script src="{{ staticsUrl }}/js/zebra-datepicker/zebra-datepicker.js"></script>
+{% endmacro %}
+{# 日期&时段#}
+{% macro dateAndTime(name1,name2) %}
+    <div class="form-group select-cell open">
+        <label class="select-text">{{ name1|default('布控日期') }}</label>
+        <div class="calendar-group">
+            {#开始时间#}
+            <ul class="calendar-control clearfix">
+                <li class="calendar-date">
+                    <input type="text" id="date-start" class="txt-date" value="{{ "now"|date("Y-m-d") }}"
+                           name="begin_date" autocomplete="off">
+                </li>
+                <li class="calendar-date">
+                    <input type="text" id="date-end" class="txt-date"
+                           value="{{ 'now'|date_modify('+60 day')|date('Y-m-d') }}" name="end_date"
+                           autocomplete="off">
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="form-group select-cell open">
+        <label class="select-text">{{ name2|default('布控时限') }}</label>
+        <div class="calendar-group">
+            {#开始时间#}
+            <ul class="calendar-control clearfix">
+                <li class="calendar-h">
+                    <input class="txt-time t-hour" data-name="h" type="text" value="00" name="b_h"
+                           autocomplete="off"/><span>:</span>
+                </li>
+                <li class="calendar-m">
+                    <input class="txt-time t-minute" data-name="m" type="text" value="00" name="b_m"
+                           autocomplete="off"/><span>:</span>
+                </li>
+                <li class="calendar-s">
+                    <input class="txt-time t-second" data-name="s" type="text" value="00" name="b_s"
+                           autocomplete="off"/>
+                </li>
+                <li>&nbsp;&nbsp;&nbsp;&nbsp;</li>
+                <li class="calendar-h">
+                    <input class="txt-time t-hour" data-name="h" type="text" value="23" name="e_h"
+                           autocomplete="off"/><span>:</span>
+                </li>
+                <li class="calendar-m">
+                    <input class="txt-time t-minute" data-name="m" type="text" value="59" name="e_m"
+                           autocomplete="off"/><span>:</span>
+                </li>
+                <li class="calendar-s">
+                    <input class="txt-time t-second" data-name="s" type="text" value="59" name="e_s"
+                           autocomplete="off"/>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <link rel="stylesheet" href="{{ staticsUrl }}/js/zebra-datepicker/zebra-date-blue.css">
+    <link rel="stylesheet" href="{{ staticsUrl }}/css/zebra-datepicker-dingzhi.css">
+    <script src="{{ staticsUrl }}/js/zebra-datepicker/zebra-datepicker.js"></script>
+{% endmacro %}
+
+{# 日期时间 #}
+{# 如果num未定义就显示加 否则不显示 #}
+{% macro dateTime2(num,name) %}
+    <div class="PassTime-1">
+        <div class="form-group">
+            <label class="col-md-3 control-label label-sub">{{ name|default('过车时段') }}</label>
+            {% if num %}
+            <div class="col-md-9 col-xs-6">
+                {% else %}
+                <div class="col-md-8 col-xs-6 passTime-container">
+                    {% endif %}
+                    <div class="input-group date js-date" id="dateStart" data-date=""
+                         data-date-format="yyyy-mm-dd hh:ii:ss">
+                        <input class="form-control" id="date-start" type="text"
+                               value="{{ "now"|date("Y-m-d") }} 00:00:00" placeholder="请选择开始时间">
+                        <div class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></div>
+                    </div>
+                    <div class="input-group">
+                        <div class="passTime-middle"></div>
+                    </div>
+                    <div class="input-group date js-date" id="dateEnd" data-date=""
+                         data-date-format="yyyy-mm-dd hh:ii:ss">
+                        <input class="form-control" id="date-end" type="text"
+                               value="{{ "now"|date("Y-m-d H:i:s") }}" placeholder="请选择开始时间">
+                        <div class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></div>
+                    </div>
+                </div>
+                {% if num %}
+                {% else %}
+                    <div class="col-md-1 col-xs-6 datebar datebarAdd">
+                        <div class="datebarIcon">
+                            <img class="zhe-img" src="{{ staticsUrl }}/images/46.png">
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% if num %}
+    {% else %}
+        <div class="PassTime-2 shownone">
+            <div class="form-group">
+                <label class="col-md-3 control-label label-sub"></label>
+                <div class="col-md-8 col-xs-6 passTime-container">
+                    <div class="input-group date js-date" id="dateStart2" data-date=""
+                         data-date-format="yyyy-mm-dd hh:ii:ss">
+                        <input class="form-control" id="date-start-2" type="text"
+                               value="{{ "now"|date("Y-m-d") }} 00:00:00" placeholder="请选择开始时间">
+                        <div class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></div>
+                    </div>
+                    <div class="input-group">
+                        <div class="passTime-middle"></div>
+                    </div>
+                    <div class="input-group date js-date" id="dateEnd2" data-date=""
+                         data-date-format="yyyy-mm-dd hh:ii:ss">
+                        <input class="form-control" id="date-end-2" type="text"
+                               value="{{ "now"|date("Y-m-d H:i:s") }}" placeholder="请选择开始时间">
+                        <div class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></div>
+                    </div>
+                </div>
+                <div class="col-md-1 col-xs-6 datebar datebarDes">
+                    <div class="datebarIcon">
+                        <img src="{{ staticsUrl }}/images/45.png">
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    <input name="beginDate" id="beginDate" type="hidden">
+    <input name="endDate" id="endDate" type="hidden">
+    <input name="b_h" id="b_h" type="hidden">
+    <input name="b_m" id="b_m" type="hidden">
+    <input name="b_s" id="b_s" type="hidden">
+    <input name="e_h" id="e_h" type="hidden">
+    <input name="e_m" id="e_m" type="hidden">
+    <input name="e_s" id="e_s" type="hidden">
+    {% if num %}
+    {% else %}
+        <input name="beginDate2" id="beginDate2" type="hidden">
+        <input name="endDate2" id="endDate2" type="hidden">
+        <input name="b_h_2" id="b_h_2" type="hidden">
+        <input name="b_m_2" id="b_m_2" type="hidden">
+        <input name="b_s_2" id="b_s_2" type="hidden">
+        <input name="e_h_2" id="e_h_2" type="hidden">
+        <input name="e_m_2" id="e_m_2" type="hidden">
+        <input name="e_s_2" id="e_s_2" type="hidden">
+    {% endif %}
+
+{% endmacro %}
+
+    {# 时限&时段 #}
+{# 时限&时段 #}
+{% macro periodTime(name1,name2) %}
+    <div class="form-group select-cell open">
+        <label class="select-text">{{ name1|default('布控时限') }}</label>
+        <div class="calendar-group">
+            {#开始时间#}
+            <ul class="calendar-control clearfix">
+                <li class="calendar-date">
+                    <input type="text" id="date-start" class="txt-date" value="{{ "now"|date("Y-m-d") }}"
+                           name="begin_date" autocomplete="off">
+                </li>
+                <li class="calendar-date">
+                    <input type="text" id="date-end" class="txt-date"
+                           value="{{ 'now'|date_modify('+60 day')|date('Y-m-d') }}" name="end_date"
+                           autocomplete="off">
+                </li>
+            </ul>
+
+        </div>
+    </div>
+    <div class="form-group select-cell open">
+        <label class="select-text">{{ name2|default('布控时段') }}</label>
+        {% if name2 == "限行时限" %}
+        <div class="calendar-restriction clearfix">
+            <div class="calendar-group">
+                {#开始时间1#}
+                <ul class="calendar-control clearfix">
+                    <li class="calendar-h">
+                        <input class="txt-time t-hour" data-name="h" type="text" value="00" name="b_h"
+                               autocomplete="off"/><span>:</span>
+                    </li>
+                    <li class="calendar-m">
+                        <input class="txt-time t-minute" data-name="m" type="text" value="00" name="b_m"
+                               autocomplete="off"/><span>:</span>
+                    </li>
+                    <li class="calendar-s">
+                        <input class="txt-time t-second" data-name="s" type="text" value="00" name="b_s"
+                               autocomplete="off"/>
+                    </li>
+                    <li>&nbsp;&nbsp;&nbsp;&nbsp;</li>
+                    <li class="calendar-h">
+                        <input class="txt-time t-hour" data-name="h" type="text" value="23" name="e_h"
+                               autocomplete="off"/><span>:</span>
+                    </li>
+                    <li class="calendar-m">
+                        <input class="txt-time t-minute" data-name="m" type="text" value="59" name="e_m"
+                               autocomplete="off"/><span>:</span>
+                    </li>
+                    <li class="calendar-s">
+                        <input class="txt-time t-second" data-name="s" type="text" value="59" name="e_s"
+                               autocomplete="off"/>
+                    </li>
+                </ul>
+            </div>
+            <div class="datebar datebarAdd">
+                <span class="datebarIcon zhe-img glyphicon glyphicon-plus-sign"></span>
+            </div>
+        </div>
+        <div class="PassTime-2 shownone calendar-restriction clearfix">
+            <div class="calendar-group">
+                <ul class="calendar-control clearfix">
+                    <li class="calendar-h">
+                        <input class="txt-time t-hour" data-name="h" type="text" value="" name="b_h_2"
+                               autocomplete="off"/><span>:</span>
+                    </li>
+                    <li class="calendar-m">
+                        <input class="txt-time t-minute" data-name="m" type="text" value="" name="b_m_2"
+                               autocomplete="off"/><span>:</span>
+                    </li>
+                    <li class="calendar-s">
+                        <input class="txt-time t-second" data-name="s" type="text" value="" name="b_s_2"
+                               autocomplete="off"/>
+                    </li>
+                    <li>&nbsp;&nbsp;&nbsp;&nbsp;</li>
+                    <li class="calendar-h">
+                        <input class="txt-time t-hour" data-name="h" type="text" value="" name="e_h_2"
+                               autocomplete="off"/><span>:</span>
+                    </li>
+                    <li class="calendar-m">
+                        <input class="txt-time t-minute" data-name="m" type="text" value="" name="e_m_2"
+                               autocomplete="off"/><span>:</span>
+                    </li>
+                    <li class="calendar-s">
+                        <input class="txt-time t-second" data-name="s" type="text" value="" name="e_s_2"
+                               autocomplete="off"/>
+                    </li>
+                </ul>
+            </div>
+            <div class="datebar datebarDes">
+                <span class="datebarIcon glyphicon glyphicon-remove-sign"></span>
+            </div>
+        </div>
+
+        {% else %}
+            <div class="calendar-group">
+                {#开始时间1#}
+                <ul class="calendar-control clearfix">
+                    <li class="calendar-h">
+                        <input class="txt-time t-hour" data-name="h" type="text" value="00" name="b_h"
+                               autocomplete="off"/><span>:</span>
+                    </li>
+                    <li class="calendar-m">
+                        <input class="txt-time t-minute" data-name="m" type="text" value="00" name="b_m"
+                               autocomplete="off"/><span>:</span>
+                    </li>
+                    <li class="calendar-s">
+                        <input class="txt-time t-second" data-name="s" type="text" value="00" name="b_s"
+                               autocomplete="off"/>
+                    </li>
+                    <li>&nbsp;&nbsp;&nbsp;&nbsp;</li>
+                    <li class="calendar-h">
+                        <input class="txt-time t-hour" data-name="h" type="text" value="23" name="e_h"
+                               autocomplete="off"/><span>:</span>
+                    </li>
+                    <li class="calendar-m">
+                        <input class="txt-time t-minute" data-name="m" type="text" value="59" name="e_m"
+                               autocomplete="off"/><span>:</span>
+                    </li>
+                    <li class="calendar-s">
+                        <input class="txt-time t-second" data-name="s" type="text" value="59" name="e_s"
+                               autocomplete="off"/>
+                    </li>
+                </ul>
+            </div>
+        {% endif %}
+    </div>
+    <link rel="stylesheet" href="{{ staticsUrl }}/js/zebra-datepicker/zebra-date-blue.css">
+    <link rel="stylesheet" href="{{ staticsUrl }}/css/zebra-datepicker-dingzhi.css">
+    <script src="{{ staticsUrl }}/js/zebra-datepicker/zebra-datepicker.js"></script>
+{% endmacro %}
+
+    {# 车牌添加 isreal:true、false #}
+    {% macro plateAdd(isreal,province) %}
+        <input name="plate_arr" id="plateAdd" type="hidden">
+        <div class="form-group clearfix">
+            {% if isreal %}
+                <div class="col-xs-12 select-cell">
+                    <label class="select-text">精确车牌号码</label>
+                    <input type="text"
+                           id="input-num" class="input-control input-focus transform-uppercase" placeholder=""
+                           data-container="body" data-toggle="popover" data-trigger="focus"
+                           data-value=""
+                           data-placement="bottom" data-content="提示：请输入精确的车牌号码（如：{{ province }}A12345）">
+                    <div class="bottom-border"></div>
+                    <a class="btn btn-primary input-sm icon-add-real">添加</a>
+                </div>
+
+            {% else %}
+                <div class="col-xs-12 select-cell">
+                    <label class="select-text">模糊车牌号码</label>
+                    <input type="text"
+                           id="input-num" class="input-control transform-uppercase" placeholder=""
+                           data-container="body" data-toggle="popover" data-trigger="focus"
+                           data-value=""
+                           data-placement="bottom"
+                           data-content="提示：模糊查询可用“*”代替任意位数，“？”代替一位（如：{{ province }}*45Q，{{ province }}A？34？5），请输入至少包含四位精确字符（汉字、字母、数字）的车牌">
+                    <div class="bottom-border"></div>
+                    <a class="btn btn-primary input-sm icon-add-plate">添加</a>
+                </div>
+
+            {% endif %}
+        </div>
+        <ul class="form-group plate-list js-plate-list clearfix">
+            {# ---- 车牌列表部分 ---- #}
+            {#<li class="alert alert-warning alert-dismissible fade in">#}
+            {#<button class="close" data-dismiss="alert"><span>×</span></button>#}
+            {#<span class="plate-num">鲁B2?4?5</span>#}
+            {#</li>#}
+        </ul>
+
+    {% endmacro %}
+
+    {#{% macro plateNum(province,accurate,id,plate) %}
+        {% if accurate %}
+            <input type="text" class="form-control transform-uppercase" id="plateAccurate" name="plate_number"
+                   placeholder="请输入精确车牌">
+        {% else %}
+            {% if id %}
+                <input type="text" data-container="body" data-toggle="popover"
+                       data-placement="right" data-trigger="focus"
+                        {% if id == "input-excplate-num" %}
+                            name="plate_number_excluded"
+                        {% else %}
+                            name="input_name"
+                        {% endif %}
+                       data-content="提示：模糊查询可用“*”代替任意位数，“？”代替一位（如：{{ province }}*45，{{ province }}A？34？5）"
+                       class="form-control transform-uppercase" id={{ id }} placeholder="可模糊查询">
+            {% else %}
+                <input type="text" data-container="body" data-toggle="popover"
+                       data-placement="right" data-trigger="focus" name="plate_number"
+                       data-content="提示：模糊查询可用“*”代替任意位数，“？”代替一位（如：{{ province }}*45，{{ province }}A？34？5）"
+                       class="form-control transform-uppercase" id="input-num" placeholder="可模糊查询" value="{{ request.plate }}">
+            {% endif %}
+        {% endif %}
+    {% endmacro %}#}
+
+
+
+    {% macro mapModel() %}
+        <div class="modal fade" id="map-model" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">选择区域</h4>
+                    </div>
+                    <div class="modal-body clearfix">
+                        <div class="col-md-12 clearfix">
+                            <p class="text-center map-num" id="poisNum">请选择搜索位置</p>
+                            {% include "map-draw-manager.twig" %}
+                            <button type="button" class="btn btn-ok btn-primary input-sm">确认</button>
+                        </div>
+                        <div id="map"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endmacro %}
+
+    {#警报方式#}
+    {% macro alarmType(tel,userName,type) %}
+        <div class="form-group select-alarm clearfix">
+            <input name="alarm_type" id="alarmType" type="hidden">
+            <label class="col-md-3">报警方式</label>
+            <div class="col-md-9">
+                <a class="col-md-6 filter-group">
+                    <input id="alarmType_sys" type="checkbox" checked="checked" disabled>
+                    <i class="glyphicon glyphicon-ok"></i>
+                    <span class="checkbox-title">系统告警</span>
+                </a>
+                {% if type %}
+                    <a class="col-md-6 filter-group">
+                        <input id="alarmType_sms" type="checkbox">
+                        <i class="glyphicon glyphicon-ok"></i>
+                        <span class="checkbox-title">短信告警</span>
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="form-group use-id clearfix">
+            <div class="col-xs-12 select-cell">
+                <label class="select-text">接收人</label>
+                <input type="text" readonly
+                       id="acceptUid_0" class="input-control input-focus" placeholder=""
+                       data-container="body" data-value="{{ tel }}({{ userName }})">
+                <div class="bottom-border"></div>
+                <span class="operation icon-add-uid">
+    <i class="glyphicon glyphicon-plus-sign"></i>
+    </span>
+            </div>
+        </div>
+    {% endmacro %}
+
+
+    {#布控原因#}
+    {% macro deployReason(name) %}
+        <div class="form-group clearfix">
+            <div class="col-xs-12 select-cell">
+                <label class="select-text">{{ name |default("布控原因") }}</label>
+                <input type="text" name="reason"
+                       id="alarm-reason" class="input-control input-focus" placeholder=""
+                       data-container="body" data-required="true" value="" maxlength="120">
+                <div class="bottom-border"></div>
+            </div>
+        </div>
+    {% endmacro %}
+
+    {#车牌号码#}
+    {% macro plateNum(type,name) %}
+        <div class="form-group clearfix">
+            <div class="col-xs-12 select-cell">
+                <label class="select-text">{{ name|default("车牌号码") }}</label>
+                {% if type %}
+                    <input type="text" data-accurate="true" id="input-num"
+                           class="input-control input-focus transform-uppercase" placeholder=""
+                           data-container="body" data-value="{{request.plate}}" name="plate_number">
+                {% else %}
+                    {% if name=="排除车牌" %}
+                        <input type="text" data-trigger="focus" data-toggle="popover" name="plate_number_excluded"
+                               id="input-excplate-num" class="input-control input-focus transform-uppercase"
+                               placeholder=""
+                               data-container="body"
+                               data-content="提示：模糊查询可用“*”代替任意位数，“？”代替一位（如：{{ province }}*45，{{ province }}A？34？5）">
+                    {% else %}
+                        <input type="text" data-trigger="focus" data-toggle="popover" name="plate_number"
+                               id="input-num" class="input-control input-focus transform-uppercase"
+                               placeholder="" data-value="{{request.plate}}"
+                               data-container="body"
+                               data-content="提示：模糊查询可用“*”代替任意位数，“？”代替一位（如：{{ province }}*45，{{ province }}A？34？5）">
+                    {% endif %}
+                {% endif %}
+                <div class="bottom-border"></div>
+            </div>
+        </div>
+    {% endmacro %}
+
+{# 审批人 #}
+{% macro approver(approverType) %}
+    <div class="form-group select-cell">
+        <select id="approver_type" class="yisa-select" data-text="审批人" data-submit="approver"
+                data-required="true">
+            {% for item in approverType %}
+                <option value="{{ item.id }}" {% if item.selected %} selected {% endif %}>{{ item.text }}</option>
+            {% endfor %}
+        </select>
+    </div>
+{% endmacro %}
+
+{#遮挡面部#}
+{% macro shadeFace() %}
+    <div class="form-group select-cell">
+        <select data-text="遮挡面部" data-submit="shade_face" data-multi="false"
+                data-required="true" class="yisa-select" id="shadeFace"  data-default="0">
+            <option value="0" selected="selected">不限</option>
+            <option value="1">主/副驾均遮挡</option>
+            <option value="2">主驾遮挡</option>
+            <option value="3">副驾遮挡</option>
+        </select>
+        <div class="border-bottom"></div>
+    </div>
+{% endmacro %}
+
+<!--有无押运员 supercargo -->
+{% macro supercargo() %}
+<div class="form-group select-cell">
+    <select id="supercargo" data-text="有无押运员" data-submit="supercargo" data-multi="false"
+            data-required="true" class="yisa-select" data-default="1">
+        <option value="1">不限</option>
+        <option value="2">有押运员</option>
+        <option value="3">无押运员</option>
+    </select>
+    <div class="border-bottom"></div>
+</div>
+{% endmacro %}

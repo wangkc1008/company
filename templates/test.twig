@@ -1,0 +1,117 @@
+array(
+                        '0'=>array(
+                            'id'=>'company_rule',
+                            'name'=>'公司环境规范'
+                        ),
+                        '1'=>array(
+                            'id'=>'front_coding_rule',
+                            'name'=>'前端编码规范'
+                        ),
+                        '2'=>array(
+                            'id'=>'back_coding_rule',
+                            'name'=>'后端编码规范'
+                        )
+                    )
+         function fun1(){
+        var value = "";
+        var a = document.getElementsByName("chk");
+        for (var i=0;i<a.length;i++ ){
+            if(a[i].checked){
+                value=value+a[i].value + "/";
+            }
+        }
+        alert(value);
+        $.ajax({
+                type:"post",
+                url:"{{currentUrl}}/update",
+                data:{
+                    id:value
+                },
+                datatype:"json",
+                success:function (data){
+                    var data = eval('('+data+')');
+                    if(data.success){
+                        alert("删除成功");
+                        location.reload(true);
+                    }else if(data.success=='0'){
+                        alert("权限不足");
+                    }else{
+                        alert("删除失败");
+                    }
+                },
+                error:function (data) {
+                    alert("请求错误，请检查网络");
+                }
+            });
+$data['menuTab'] = array(
+                '0'=>array(
+                    'name'=>'研发',
+                    'nodes'=>array(
+                        '0'=>array(
+                            'nodeEnName'=>'develop',
+                            'nodeCnName'=>'研发',
+                            'child_nodes'=>array(
+                                '0'=>array(
+                                    'nodeId'=>'company_rule',
+                                    'nodeCnName'=>'公司环境规范',
+                                ),
+                                '1'=>array(
+                                    'nodeId'=>'front_coding_rule',
+                                    'nodeCnName'=>'前端编码规范',
+                                )
+                            )
+                        )
+                    )
+                )
+        );
+         <div class="panel-body">
+            {% for item in menuTab %}
+                <div role="tabpanel" {% if loop.index == 1 %} class="tab-pane active" {% else %}
+                     class="tab-pane" {% endif %}id="{{ item.name }}">
+                    <table class="table table-bordered">
+                        <thead>
+                        <tr>
+                            <th class="col-md-3">子系统</th>
+                            <th>模块权限</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for nav in item.nodes %}
+                            <tr>
+                                <td>
+                                    <label class="checkbox-inline">
+                                        <input data-type="{{ nav.nodeEnName }}" class="check-all"
+                                               type="checkbox" {% if nav.checked==1 %} checked {% endif %}
+                                               value="{{ nav.nodeId }}"> {{ nav.nodeCnName }}
+                                    </label>
+                                </td>
+                                <td class="menu-list {{ nav.nodeEnName }}-list">
+                                    <div>
+                                        <ul>
+                                            {% for items in nav.child_nodes %}
+                                                <li>
+                                                    <label class="checkbox-inline">
+                                                        <input type="checkbox"
+                                                                {% if items.checked==1 %} checked {% endif %}
+                                                               value="{{ items.nodeId }}"> {{ items.nodeCnName }}
+                                                    </label>
+                                                </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% endfor %}
+            <div class="row btns">
+                <input type="button" value="保存" class="btn btn-save btn-primary">
+                <input type="button" value="取消" class="btn btn-cancel btn-danger">
+            </div>
+        </div>
+        <script src="/company/templates/statics/js/alertify/alertify.min.js"></script>
+    <script src="/company/templates/statics/js/gb-all.js"></script>
+     <link type="text/css" href="/company/templates/statics/js/alertify/alertify.css" rel="stylesheet">
+    <link type="text/css" href="/company/templates/statics/css/gb-all.css" rel="stylesheet">

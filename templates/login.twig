@@ -1,0 +1,83 @@
+{#
+    登录页面的twig模板
+    对应控制器 Yisa/controllers/Login.php
+
+    最后修改时间：2018/12/12
+#}
+{% block head %}
+        <meta charset="UTF-8">
+        <title>{{ title }}</title>
+        {% include "static_resource.php" %}
+
+
+        <style>
+            body {
+                background: url("./templates/yisa_statics/img/login_back.jpg");
+            }
+
+            .login_right {
+                background-color: rgba(255, 255, 255, 0.75);
+                border-radius: 25px;
+                /*background-color: #FFFFFF;*/
+            }
+
+            .login_form {
+                margin-top: 40px;
+            }
+
+            .left_right_container {
+                min-height: 500px;
+            }
+
+        </style>
+        <script type='text/javascript'>
+            $(document).ready(function () {
+                $("a").on("click", function () {
+                    alert('请联系管理员***');
+                });
+            });
+        </script>
+    </head>
+{% endblock %}
+{% block container %}
+    <body>
+    <div class="container">
+        <div class="row" style="margin-top: 100px">
+            <div class="col-md-12 left_right_container">
+                <div class="col-md-4 login_right col-md-offset-4">
+                    <div class="col-md-12 login_form">
+                        <div class="col-md-12 col-md-offset-3 yisa_logo img-responsive">
+                            <img src="./templates/yisa_statics/img/yisa_logo.png" alt="">
+                        </div>
+                        <div class="col-md-12">
+                            <div class="col-md-12" style="margin-top: 10px;margin-bottom: 20px;">
+                                <h3>内部开发人员专用</h3>
+                            </div>
+                            <div class="col-md-12">
+                                <form role="form" action='{{ currentUrl }}' method='post'>
+                                    <div class="form-group">
+                                        <label for="name">用户名</label>
+                                        <input type="text" class="form-control" name="user_name" placeholder="请输入用户名">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="name">密码</label>
+                                        <input type="password" class="form-control" name="user_passwd"
+                                               placeholder="请输入密码">
+                                    </div>
+                                    <div class="col-md-6 col-md-offset-3">
+                                        <div class="form-group" style="margin-top: 20px;margin-bottom: 20px">
+                                            <button type="submit" class="btn btn-primary btn-lg" id="login-btn">点我登录
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </body>
+{% endblock %}

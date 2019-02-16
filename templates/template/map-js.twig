@@ -1,0 +1,78 @@
+<script>
+    var mapConfig = {
+        center: {{ map.center }},
+        zoom: {{ map.zoom }},
+        type: '{{ map.type }}',
+        minZoom: {{ map.minZoom }},
+        maxZoom: {{ map.maxZoom }},
+        getLocationsUrl: '{{ map.getLocationsUrl|raw }}',
+        mapDrivingRoute: '{{ map.mapDrivingRoute|raw }}',
+        mapStyle: {
+            tileFlag: '{{ map.mapStyle.tileFlag }}',
+            tileUrl: '{{ map.mapStyle.tileUrl | raw }}',
+            mapUrl: '{{ map.mapStyle.mapUrl | raw }}'
+        },
+        mapTileHost: '{{ map.mapTileHost | raw }}'
+    };
+    var host = "{{ map.host }}";
+    var hostName = "{{ map.hostName }}";
+</script>
+{% if map.type == "tumeng" %}
+    <script src="{{ map.apiUrl|raw }}"></script> 
+    <script src="{{ staticsUrl }}/js/map/tmap-tools.js"></script>
+    <script src="{{ staticsUrl }}/js/map/tmap.js"></script>
+{% elseif map.type == "baidu" %}
+    <script>
+        var bmapTile = "{{ map.tile }}";
+    </script>
+    <script src="{{ staticsUrl }}/js/baidu-api.js"></script>
+    {# <script src="{{ map.apiUrl|raw }}"></script>  #}
+    <script src="{{ staticsUrl }}/js/map/bmap-tools.js"></script>
+    <script src="{{ staticsUrl }}/js/map/bmap.js"></script>
+{% elseif map.type == "amap" %}
+    <script>
+        var mapTileHost = '{{ map.mapTileHost | raw }}';
+        var mapApiHost = '{{ map.mapApiHost | raw }}';
+        var apiUrl = '{{ map.apiUrl | raw }}';
+    </script>
+    <script src="{{ map.apiUrl|raw }}"></script> 
+    <script src="http://{{ map.mapApiHost }}/js/ui.js"></script>
+    <script src="{{ staticsUrl }}/js/map/amap.js"></script>
+{% elseif map.type == "arcgis" %}
+    <link rel="stylesheet" href="{{ map.cssUrl|raw }}">
+    <link rel="stylesheet" href="{{ staticsUrl }}/js/arcgis-map/css/InfoWindow.css">
+    <style type="text/css">
+        .esriControlsBR {
+            display: none !important;
+        }
+
+        #map_zoom_slider {
+            top: 55px !important;
+        }
+
+        .scalebar_bottom-right {
+            right: 175px;
+        }
+    </style>
+    <script>
+        var arcStaticUrl  = '{{ staticsUrl }}';
+        var arcApiUrl = '{{ map.apiUrl }}';
+        var projectUrl = '{{ projectUrl|raw }}';
+        var arcBaseLayer = '{{ map.baseLayer }}';
+        var dojoConfig = {
+            async: true,
+            packages: [{
+                'name': 'extras',
+                'location': location.protocol + '//' + location.host + projectUrl + arcStaticUrl + '/js/arcgis-map/extras'
+            }]
+        };
+    </script>
+    <script src="{{ map.apiUrl|raw }}"></script>
+{% elseif map.type == "pgis" %}
+    <script type="text/javascript" charset="GB2312" src="{{ map.apiUrl|raw }}"></script>
+    <script src="{{ staticsUrl }}/js/map/pgis.js"></script>
+{% elseif map.type == "wuhan" %}
+    <script src="{{ map.apiUrl|raw }}"></script> 
+    <script src="{{ staticsUrl }}/js/map/tmap-tools.js"></script>
+    <script src="{{ staticsUrl }}/js/map/tmap.js"></script>
+{% endif %}

@@ -1,0 +1,257 @@
+{#
+    开发-常用字段定义 的twig模板
+    对应控制器 Yisa/controllers/common_field_define.php
+
+    最后修改时间：2018/12/12
+#}
+{% block head %}
+    <title>{{ title }}</title>
+    <style>
+        .my-container {
+            margin-top: 100px;
+        }
+
+        .table-first-item {
+            width: 10%;
+        }
+
+        .table-second-item {
+            width: 35%;
+        }
+        .table-third-item{
+            width: 35%;
+        }
+    </style>
+    {% include "static_resource.php" %}
+{% endblock %}
+{% block container %}
+    <body>
+    {% include "navigation.twig" %}
+    <div class="container my-container">
+
+        <div class="row clearfix">
+            <div class="col-md-12 column">
+
+                <!-- 表格上方元素，不包括导航栏-->
+                <div class="row clearfix">
+                    <div class="col-md-12 column">
+                        <ul class="breadcrumb">
+                            <li>
+                                <a href="{{ indexUrl }}">主页</a>
+                            </li>
+                            <li>
+                                <a href="{{ indexUrl }}">开发</a>
+                            </li>
+                            <li class="active">
+                                <a>{{ title }}</a>
+                            </li>
+                        </ul>
+
+                        <div class="col-md-8">
+                            <div class="page-header">
+                                <h3>
+                                    公司常用字段定义，请严格遵守
+                                </h3>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="col-md-8 col-md-offset-2" style="margin-top: 30px">
+                                <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#add-new-rule">
+                                    添加新字段定义
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 表格上方元素，不包括导航栏-->
+
+                <!-- 下方表格 -->
+                <div class="row clearfix " style="margin-top: 20px">
+                    <div class="col-md-12 column">
+                        <table class="table table-striped table-bordered">
+                            <thead>
+                            <tr>
+                                <th class="table-first-item">序号</th>
+                                <th class="table-second-item">字段名	</th>
+                                <th class="table-third-item">含义</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            {% for key,value in data %}
+                                <tr>
+                                    <td class="table-first-item">{{ value['id'] }}</td>
+                                    <td content-id="{{ value['id'] }}" class="table-second-item">{{ value['field_name'] }}</td>
+                                    <td class="table-third-item">{{ value['field_mean'] }}</td>
+                                    <td>
+                                        <div class="col-sm-12">
+                                            <div class="col-sm-6">
+                                                <button data-id="{{ value['id'] }}" class="btn btn-primary edit-button"
+                                                        data-toggle="modal" data-target="#edit-rule">修改
+                                                </button>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <button class="btn btn-danger del-button" data-id="{{ value['id'] }}">删除
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+
+                            </tbody>
+
+                        </table>
+                    </div>
+                </div>
+                <!-- 下方表格 -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 添加规则弹出框 -->
+    <div class="modal fade" id="add-new-rule" tabindex="-1" role="dialog"
+         aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-hidden="true">×
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">
+                        添加新字段定义
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    {# 这里需要一个表格 提交到#}
+                    <form method="post" action="{{ currentUrl }}&m=insert">
+                        <div class="form-group">
+                            <label>字段</label>
+                            <textarea class="form-control" rows="3" name="field_name"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>定义</label>
+                            <textarea class="form-control" rows="3" name="field_mean"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <p>(可选项) &nbsp &nbsp 添加在编号</p>
+                            <input type="number" class="form-control" name="id">
+                            <br/>
+                            <p>之前，否则默认添加在最后</p>
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary">
+                                添加新字段定义
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default"
+                            data-dismiss="modal">关闭
+                    </button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+    <div class="modal fade" id="edit-rule" tabindex="-1" role="dialog"
+         aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-hidden="true">×
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">
+                        修改规则
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    {# 这里需要一个表格 提交到控制器#}
+                    <form method="post" action="{{ currentUrl }}&m=update">
+                        <input id="edit-id" name="id" type="hidden" value="">
+                        <div class="form-group">
+                            <label>字段名</label>
+                            <textarea id="edit-name" class="form-control" rows="3" name="field_name"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>字段定义</label>
+                            <textarea id="edit-mean" class="form-control" rows="3" name="field_mean"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary">
+                                提交修改
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default"
+                            data-dismiss="modal">关闭
+                    </button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+    </body>
+    <script>
+        /**
+         * 修改规则的js代码，因为需要提交到后端修改的id
+         * 因此需要在弹框中的表单中，存放一个id的隐藏input提交到后台
+         */
+        $(".edit-button").click(function () {
+            let id = $(this).attr("data-id");
+            get_name_and_mean(id);
+            $("#edit-id").val(id);
+        });
+
+        $(".del-button").click(function () {
+            let id = $(this).attr("data-id");
+            let res = confirm("确定要删除id为：" + id + " 的规则吗？");
+
+            if (res === true) {
+                $.ajax({
+                    type: "POST",
+                    url: "{{ currentUrl }}&m=delete",
+                    data: {
+                        "id": id
+                    },
+                    dataType: "json",
+                    success: function (data) {
+                        console.log(data);
+                        if (data.success === 0){
+                            alert("删除失败，权限不足！");
+                        }else{
+                            alert("删除成功！");
+                            location.href="{{ currentUrl }}";
+                        }
+                    },
+                    error: function () {
+                        alert("连接服务器失败！");
+                    }
+                })
+            } else {
+                alert("好吧 QAQ ~~");
+            }
+        });
+
+        /**
+         * 根据绑定的content-id 将表格中的数据展示在修改页面
+         * @param id 绑定的content-id
+         */
+        function get_name_and_mean(id) {
+            let mean_arr = $(".table-third-item");
+            $(".table-second-item").each(function (i,e) {
+                if (i === Number(id)){
+                    $("#edit-name").text($(e).text());
+                    $("#edit-mean").text($(mean_arr[i]).text());
+                }
+            });
+        }
+
+    </script>
+{% endblock %}
+

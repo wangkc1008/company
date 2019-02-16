@@ -1,0 +1,28 @@
+<div class="blackList-sidebar">
+    <h3><span class="glyphicon glyphicon-home" aria-hidden="true"></span>黑名单管理</h3>
+
+    <ul id="sidebarUl">
+        {% for item in navTree3 %}
+            <li class="on sidebarFL-container">
+                <p class="sidebarFL">
+                    <span class="glyphicon {{ item.icon }}"></span>
+                    <a href="javascript:;">{{ item.text }}</a>
+                    <span class="glyphicon glyphicon-triangle-top toggleShowBtn"></span>
+                </p>
+                <ul class="sidebarSL-container">
+                    {% for node in item.nodes %}
+                    <li>
+                        <p class="sidebarSL {% if node.text==activeBranch %}active{% endif
+                        %}" >
+                            <a href="{{ node.link }}" >{{ node
+                                .text }}</a>
+                        </p>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </li>
+        {% endfor %}
+    </ul>
+</div>
+<link rel="stylesheet" href="{{ staticsUrl }}/css/blackList-manager-sidebar.css">
+<script src="{{ staticsUrl }}/js/blackList-manager-sidebar.js"></script>

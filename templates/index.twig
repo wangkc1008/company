@@ -1,0 +1,56 @@
+{% extends "./template/layout.twig" %}
+{% block head %}
+    <title>{{ title }}</title>
+    <style type="text/css">
+        table.gridtable {
+            font-family: verdana,arial,sans-serif;
+            font-size:11px;
+            color:#333333;
+            border-width: 1px;
+            border-color: #666666;
+            border-collapse: collapse;
+            }
+        table.gridtable th {
+             border-width: 1px;
+             padding: 8px;
+             border-style: solid;
+             border-color: #666666;
+             background-color: #dedede;
+             }
+        table.gridtable td {
+              border-width: 1px;
+              padding: 8px;
+              border-style: solid;
+              border-color: #666666;
+               background-color: #ffffff;
+              }
+        </style>
+{% endblock %}
+{% block container %}
+    {% if(isset(data) and data and is_array(data) and count(data) > 0) %}
+    <body>
+        <table class="gridtable">
+            <tr>
+                <th>序号</th>
+                <th>内容</th>
+                <th>操作</th>
+            </tr>
+            {% for key value in data %}
+            <tr>
+                <th>{{ value.id }}</th>
+                <th>{{ value.content }}</th>
+                <th><a href="<?=site_url('company_rule/update?id='.$value['id'])?>" class="update">修改</a>&nbsp;&nbsp;<a href="company_rule/delete" class="delete">删除</a></th>
+            </tr>
+            <?php endforeach;?>
+        </table>
+    </body>
+    {% endif %}
+{% endblock %}
+
+    {#<#include "template/navbar.ftl">
+        <div class="map-container">
+            <#include "template/map.ftl" >
+                <#include "template/map-draw-manager.ftl">
+        </div>
+
+        <script src="${staticsUrl}/js/index.js"></script>#}

@@ -1,0 +1,28 @@
+<div class="map-draw-manager" id="drawManager" role="group" >
+    <button type="button" class="btn btn-transparent draw-default current" id="drawDefault"></button>
+    <button type="button" class="btn btn-transparent draw-circle" id="drawCircle"></button>
+    <button type="button" class="btn btn-transparent draw-rectangle" id="drawRectangle"></button>
+    {% if "pgis" != map.type %}
+        <button type="button" class="btn btn-transparent draw-arbitrary" id="drawArbitrary"></button>
+    {% endif %}
+    <button type="button" class="btn btn-transparent draw-select" id="drawSelect"></button>
+    <button type="button" class="btn btn-transparent draw-clear" id="drawClear"></button>
+    <input type="hidden" name="location_id" id="locationID">
+    <input type="hidden" name="region_id" id="regionID">
+    {% if "pgis" == map.type %}
+        <input type='hidden' id='dataInputx'>
+        <input type='hidden' id='dataInputy'>
+    {% endif %}
+</div>
+<div class="panel panel-default location-tree" id="locationTree">
+    <div class="panel-heading">
+        <input type="text" class="form-control input-sm" id="locationSearch" placeholder="请输入关键字筛选">
+        <span class="glyphicon glyphicon-remove clear-search" id="clearSearch"></span>
+    </div>
+    <div class="location-tree-list">
+        <ul class="ztree" id="locationTreeList"></ul>
+        <ul class="ztree" id="locationTreeFilter"></ul>
+    </div>
+</div>
+<link rel="stylesheet" href="{{ staticsUrl }}/js/ztree/zTreeStyle/zTreeStyle.css">
+<script src="{{ staticsUrl }}/js/ztree/jquery.ztree.all.min.js"></script>

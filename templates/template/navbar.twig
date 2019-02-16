@@ -1,0 +1,176 @@
+<nav class="navbar navbar-inverse navbar-static-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                    aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            {% if sysName == title %}
+            <a class="navbar-brand" href="{{ indexUrl }}">{{ sysName }}</a>
+            {% else %}
+            <a class="navbar-brand" href="{{ indexUrl }}">{{ sysName }} - {{ title }}</a>
+            {% endif %}
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right control-menu">
+               <!-- <li class="home">
+                    <a href="{{ indexUrl }}" title="点击返回首页"></a>
+                    <div class="nav-panel  pre-scrollable">
+                        {% set color = ['red', 'orange', 'blue', 'green', 'purple'] %}
+                        {% for nav in navTree %}
+                            <h3 class="panel-title">
+                                <i class="iconfont {{ nav.icon }}"></i><span>{{ nav.text }}</span>
+                            </h3>
+                            <div class="menu-list">
+                                <ul class="row">
+                                    {% for item in nav.nodes %}
+                                        <li class="col-md-3 con-xs-4">
+                                            <a href="{{ item.link }}"
+                                               class="btn btn-block button-{{ color[loop.index0 % 5] }}"
+                                               role="button">{{ item.text }}</a>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </li>-->
+                <li class="home">
+                    <a href="{{ indexUrl }}" title="点击返回首页"></a>
+                    <div class="nav-panel ">
+                        <div class="triangle"></div>
+                        {% if navTree2|length < 6 %}
+                        <div class="nav-scrool width width5 ">
+                            {% else %}
+                            <div class="nav-scrool width width6 ">
+                                {% endif%}
+                                <div class="nav-head ">
+                                    <ul>
+                                        {% for key,nav in navTree2 %}
+                                        {% if ( key==0 )%}
+                                        <li class="active" data-id="{{key}}">{{nav.name}}</li>
+                                        {% else %}
+                                        <li data-id="{{key}}">{{nav.name}}</li>
+                                        {% endif %}
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                                <div class="nav-body">
+                                    {% for key,nav in navTree2 %}
+                                    {% if ( key==0 )%}
+                                    <div class="active clearfix">
+                                        {% else %}
+                                        <div class="clearfix ">
+                                            {% endif %}
+                                            {% for list in nav.data %}
+                                            <div  class="nav-title">
+                                                {{list.name}}
+                                            </div>
+                                            <ul>
+                                                {% for last in list.data %}
+                                                <li><a href="{{ last.url | raw }}" target="_blank">{{last.name}}</a></li>
+                                                {% endfor %}
+                                            </ul>
+                                            {% endfor %}
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                </li>
+                <li class="setting"><a href="{{ manageUrl|raw }}" title="点击进入系统管理"></a></li>
+                <li class="user">
+                    <a href="#" title="查看用户信息" onclick="return false;"></a>
+                    <div class="user-panel">
+                        <div class="triangle"></div>
+                        <h3>用户信息</h3>
+                        <div class="user-info clearfix">
+                            <input type="hidden" id="userID" value="{{ userInfo.userID }}">
+                            {% if userInfo.userPhoto %}
+                                <div class="col-md-3"><img src="{{ userInfo.userPhoto }}" alt=""></div>
+                            {% else %}
+                                <div class="col-md-3"><img src="{{ staticsUrl }}/images/login-avatar.png" alt=""></div>
+                            {% endif %}
+                            <div class="col-md-9">
+                                <p>用户名：{{ userInfo.account }}</p>
+                                <p>手机号：{{ userInfo.userTel }}</p>
+                            </div>
+                        </div>
+                        <div class="login-info">
+                            <ul>
+                                <li>上次登录时间：{{ userInfo.loginTime }}</li>
+                                <li>上次登录IP：{{ userInfo.loginIp }}</li>
+                                <li>登录次数：{{ userInfo.loginCount }}</li>
+                            </ul>
+                        </div>
+                        <div class="user-menu clearfix">
+                            <a class="exit" href="{{ logOutUrl|raw}}">退出</a>
+                            <a class="edit-pwd" data-toggle="modal" data-target="#pwd-model">修改密码</a>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div><!--/.nav-collapse -->
+    </div>
+</nav>
+<!--修改密码-->
+<div class="modal fade" id="pwd-model" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">修改密码</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <label for="inputEmail" class="col-sm-2 control-label">旧密码</label>
+                        <div class="col-sm-9">
+                            <input type="password" class="form-control" id="old-pwd" placeholder="请输入旧密码">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputPassword" class="col-sm-2 control-label">新密码</label>
+                        <div class="col-sm-9">
+                            <input type="password" class="form-control" id="new-pwd" placeholder="请输入新密码">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputPassword2" class="col-sm-2 control-label">确认密码</label>
+                        <div class="col-sm-9">
+                            <input type="password" class="form-control" id="new-pwd2" placeholder="请再次输入新密码">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-pwd-save btn-primary">保存</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--session过期-->
+<div class="modal fade" id="tipModal" tabindex="-2" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title"></h4>
+            </div>
+            <div class="modal-body">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var ajaxEditPwdUrl="{{ ajaxEditPwdUrl|raw }}";
+    var loginUrl="{{ loginUrl|raw }}";
+    //行驶方向
+    var driveDirection="{{ searchSupport.driveDirection }}";
+</script>

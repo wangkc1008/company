@@ -1,0 +1,72 @@
+<div id="map"></div>
+<div id="map-pannel">
+    {% for item in locationShow %}
+        <div class="map-pannel-item">
+            <img src="{{staticsUrl}}/images/map/{{ item.type }}.png" alt="设备图标"><span class="text">{{ item.name }}</span>
+        </div>
+    {% endfor %}
+</div>
+{% if "pgis" == map.type %}
+    <style type="text/css">
+        #map * {
+            -webkit-box-sizing: content-box !important;
+            -moz-box-sizing: content-box !important;
+            box-sizing: content-box !important;
+        }
+        #map .map-label {
+            width: 46px;
+            height: 38px;
+            margin-left: -23px;
+            margin-top: 19px;
+        }
+        #map .map-label span {
+            display: inline-block;
+            height: 16px;
+            width: 100%;
+            line-height: 16px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            text-align: center;
+        }
+    </style>
+{% elseif "arcgis" == map.type %}
+    <style type="text/css">
+        .label-city {
+            width: 62px;
+            height: 62px;
+            text-align: center;
+            background-color: #4aab68;
+            opacity: 0.8;
+            border-radius: 50%;
+            overflow: hidden;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .label-city .imap-label {
+            position: absolute;
+            top: 12px;
+            width: 62px;
+            border: none;
+            background: transparent;
+            color: #fff;
+            font-weight: normal;
+            opacity: 1;
+        }
+        .label-city .imap-label span {
+            display: inline-block;
+            height: 16px;
+            width: 100%;
+            line-height: 16px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            text-align: center;
+        }
+
+        .label-city:hover{
+            background-color: #e4393c;
+        }
+    </style>
+{% endif %}

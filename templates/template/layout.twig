@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="{{ staticsUrl }}/images/favicon.ico" type="image/x-icon" rel="icon">
+    <link href="{{ staticsUrl }}/css/bootstrap.min.css" rel="stylesheet">
+    <script src="{{ staticsUrl }}/js/base.js"></script>
+    <script src="{{ staticsUrl }}/js/jquery.nicescroll.min.js"></script>
+    <!--[if lt IE 9]>
+    <script src="{{ staticsUrl }}/js/ie8.js"></script>
+    <![endif]-->
+    <script>var staticsUrl = '{{ staticsUrl|raw }}', sysRegion = '{{ sysRegion }}', IS_VIDEO_CAR = '{{ IS_VIDEO_CAR }}'</script>
+    {% block head %}
+    {% endblock %}
+</head>
+<body {% block water %}{% endblock %}>
+{% block container %}
+{% endblock %}
+{% if 'development' == env %}
+    <script>
+      document.write('<script src="http://'
+        + (location.host || 'localhost').split(':')[0]
+        + ':35729/livereload.js?snipver=1"><\/script>')
+    </script>
+{% endif %}
+</body>
+</html>

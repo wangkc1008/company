@@ -1,0 +1,128 @@
+.logo{
+    background-image: url("./templates/yisa_logo.png");
+    width: 115px;
+    height: 56px;
+    margin: 10px 70px 10px 1px;
+}
+.sys_list{
+    text-align: center;
+    font-size: 24px;
+    color: white;
+    background-color: steelblue;
+    margin: 20px;
+    padding: 5px;
+    border-radius: 10px;
+}
+.sys_list:hover{
+    background-color: cadetblue;
+}
+.add_sys{
+    font-size: 20px;
+    margin-top: 200px;
+}
+.del_sys{
+    font-size: 20px;
+    margin-top: 200px;
+}
+.mod_list{
+    font-size: 18px;
+    margin: 18px;
+    padding: 18px;
+    background: mediumseagreen;
+    border-radius: 18px;
+}
+.mod_order{
+    width: 40px;
+    text-align: center;
+}
+.add_mod{
+    margin-top: 80px;
+    margin-bottom: 80px;
+}
+.del_mod{
+    margin-top: 80px;
+    margin-bottom: 80px;
+}
+.cond_list{
+    font-size: 15px;
+    margin: 5px 50px;
+    background: lightgreen;
+    padding: 5px;
+    border: 2px solid white;
+    border-radius: 8px;
+}
+.cond_text{
+    width: 400px;
+    height: 80px;
+    border-radius: 10px;
+    outline: none;
+}
+.sys_button{
+    background-color: cornflowerblue;
+    color: white;
+    padding: 5px 10px;
+    border: 1px solid floralwhite;
+    outline:none;
+    border-radius: 10px;
+    box-shadow: 0 3px darkgray;
+}
+.sys_button:hover{
+    background-color: deepskyblue;
+}
+.sys_button:active{
+    background-color: steelblue;
+    box-shadow: none;
+    transform: translateY(2px);
+}
+.cond_button{
+    background-color: steelblue;
+    color: white;
+    font-size: 15px;
+    border: 1px solid grey;
+    outline:none;
+    border-radius: 5px;
+}
+.cond_button:hover{
+    background-color: dodgerblue;
+}
+.cond_button:active{
+    background-color: darkblue;
+    box-shadow: none;
+    transform: translateY(2px);
+}
+.mod_button{
+    background-color: cornflowerblue;
+    color: white;
+    padding: 5px 10px;
+    border: 1px solid floralwhite;
+    outline:none;
+    border-radius: 10px;
+    box-shadow: 0 3px darkgray;
+}
+.mod_button:hover{
+    background-color: deepskyblue;
+}
+.mod_button:active{
+    background-color: steelblue;
+    box-shadow: none;
+    transform: translateY(2px);
+}
+
+input{
+    color: black;
+    border: 1px solid darkgray;
+    border-radius: 10px;
+    outline: none;
+    text-align: center;
+}
+select{
+    color: black;
+    width: 150px;
+    height: 30px;
+    border: 1px solid darkgray;
+    border-radius: 5px;
+    outline: none;
+}
+.table-first-item{width: 10%;}
+.table-second-item{width: 20%;}
+.table-third-item{width: 50%}
